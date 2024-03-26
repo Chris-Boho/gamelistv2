@@ -1,7 +1,9 @@
-// "use client";
-import { createRef, useState } from "react";
+"use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaList } from "react-icons/fa";
 import { db } from "~/server/db";
+import { api } from "~/trpc/react";
 import { user } from "~/types/types";
 
 type Props = {
@@ -9,32 +11,30 @@ type Props = {
 };
 
 export default function CreateList({ user }: Props) {
-  // const [newList, setNewList] = useState("");
-  const newList = createRef();
+  const router = useRouter();
+  const [name, setName] = useState("");
+
+  const createList = api.list.createList.useMutation({
+    onSuccess: () => {
+      router.refresh();
+      setName("");
+    },
+  });
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log("Submit: ", newList);
-    // const entry = await db.list
-    //   .create({
-    //     data: {
-    //       name: newList,
-    //       Owner: {
-    //         connect: {
-    //           id: user.id,
-    //         },
-    //       },
-    //     },
-    //   })
-    //   .catch((error) => console.error(error));
-
-    // setNewList("");
+    createList.mutate({ name });
+    setName("");
+    const closeModal = (
+      document.getElementById("my_modal_5") as HTMLDialogElement
+    ).close();
+    closeModal;
   }
 
   return (
     <>
       <button
-        className="btn"
+        className="btn btn-info"
         onClick={() =>
           (
             document.getElementById("my_modal_5") as HTMLDialogElement
@@ -42,7 +42,7 @@ export default function CreateList({ user }: Props) {
         }
       >
         <FaList />
-        <p>Create List</p>
+        <p className="text-base">Create List</p>
       </button>
       <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
@@ -52,13 +52,16 @@ export default function CreateList({ user }: Props) {
               type="text"
               placeholder="Type here"
               className="input input-bordered input-info mr-4 mt-4 w-full max-w-xs"
-              // onChange={(e) => setNewList(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
             <button className="btn btn-info">Submit</button>
           </form>
           <div className="modal-action">
             <form method="dialog">
               <button className="btn btn-error">Close</button>
+            </form>
+            <form method="dialog" className="modal-backdrop">
+              <button>close modal</button>
             </form>
           </div>
         </div>

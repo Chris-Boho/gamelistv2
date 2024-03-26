@@ -1,3 +1,4 @@
+import { List } from "@prisma/client"
 
 export type user = {
   id: string,
@@ -9,17 +10,17 @@ export type user = {
   lists?: list[],
 }
 
-export type list = {
-  id: number,
-  name: string,
-  createdAt: number,
-  updatedAt: number,
-  Owner: user,
+export type list = List & {
+  // id: string,
+  // name: string,
+  // createdAt: Date,
+  // updatedAt: number,
+  Owner?: user,
   games?: game[],
 }
 
 export type game = {
-  id: number,
+  id: string,
   name: string,
   follows?: number,
   cover?: cover, 

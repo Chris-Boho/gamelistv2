@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 import Provider from "./components/topbar/provider";
+import { TRPCReactProvider } from "~/trpc/react";
 import { generateAccessToken } from "~/server/token";
 import Navbar from "./components/topbar/navbar";
 
@@ -25,10 +26,10 @@ export default async function RootLayout({
   return (
     <html lang="en" data-theme="light">
       <body className={`font-sans ${inter.variable}`}>
-        <Provider>
+        <TRPCReactProvider>
           <Navbar />
           {children}
-        </Provider>
+        </TRPCReactProvider>
       </body>
     </html>
   );

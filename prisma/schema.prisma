@@ -59,7 +59,7 @@ model User {
 }
 
 model List {
-    id          Int      @id @default(autoincrement())
+    id          String   @id @default(cuid())
     name        String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
@@ -71,11 +71,14 @@ model List {
 }
 
 model Game {
-    id        Int    @id
+    id        String @id
+    gameId    String
     name      String
     cover_url String
     score     Int
     list      List   @relation(fields: [listId], references: [id])
-    listId    Int
+    listId    String
     review    String
+
+    @@unique([name, listId])
 }

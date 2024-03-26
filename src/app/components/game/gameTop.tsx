@@ -3,12 +3,16 @@ import Header from "../other/header";
 import SmallHeader from "../other/smallHeader";
 import SmallDetails from "./smallDetails";
 import GameRatings from "./gameRatings";
+import AddToList from "./addToList";
+import { getCurrentUser } from "~/server/session";
 
 type Props = {
   game: game;
 };
 
-export default function GameTop({ game }: Props) {
+export default async function GameTop({ game }: Props) {
+  const user = await getCurrentUser();
+
   console.log("Game Props: ", game);
   if (game && game.genres) {
     return (
@@ -17,6 +21,11 @@ export default function GameTop({ game }: Props) {
           <div className="ml-2 sm:ml-0">
             <Header text={`${game.name}`} />
           </div>
+          {user && (
+            <div>
+              <AddToList game={game} />
+            </div>
+          )}
           <div className="divider"></div>
           <div className="max-w-3xl overflow-hidden md:flex">
             <div className="md:flex-shrink-0">
