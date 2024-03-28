@@ -19,7 +19,7 @@ export default function PersonalList({ user }: Props) {
     <div className="p-4">
       <Header text="Personal Lists" />
       <div className="mt-4">
-        <CreateList user={user} />
+        <CreateList />
       </div>
       {userLists.data && userListLength! > 0 ? (
         userLists.data.map((list: list) => (

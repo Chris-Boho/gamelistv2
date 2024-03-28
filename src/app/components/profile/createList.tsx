@@ -1,22 +1,16 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaList } from "react-icons/fa";
-import { db } from "~/server/db";
 import { api } from "~/trpc/react";
-import { user } from "~/types/types";
 
-type Props = {
-  user: user;
-};
-
-export default function CreateList({ user }: Props) {
-  const router = useRouter();
+export default function CreateList() {
+  const utils = api.useUtils();
   const [name, setName] = useState("");
 
   const createList = api.list.createList.useMutation({
     onSuccess: () => {
-      router.refresh();
+      // Invalidates the cached list. This forces the list to refresh on the UI.
+      utils.list.getLists.invalidate();
       setName("");
     },
   });
@@ -24,7 +18,6 @@ export default function CreateList({ user }: Props) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     createList.mutate({ name });
-    setName("");
     const closeModal = (
       document.getElementById("my_modal_5") as HTMLDialogElement
     ).close();
@@ -50,6 +43,7 @@ export default function CreateList({ user }: Props) {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
+              value={name}
               placeholder="Type here"
               className="input input-bordered input-info mr-4 mt-4 w-full max-w-xs"
               onChange={(e) => setName(e.target.value)}
